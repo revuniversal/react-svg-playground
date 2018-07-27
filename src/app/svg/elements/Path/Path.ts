@@ -1,7 +1,7 @@
 import { Color } from 'csstype';
 import { action, observable } from 'mobx';
 import Coordinate from 'src/app/Coordinate';
-import { sortDown, sortUp } from 'src/app/ISortable';
+import { addItem, deleteItem, sortDown, sortUp } from 'src/app/ISortable';
 import ISvgElement from '../../SvgElement';
 import Command from './Command';
 import Curve from './Curve';
@@ -19,27 +19,22 @@ class Path implements ISvgElement {
 
   @action
   public deleteCommand = (target: Command) => {
-    const index = this.commands.indexOf(target);
-    this.commands.splice(index, 1);
-    this.setSortability(0);
-    this.setSortability(this.commands.length - 1);
+    deleteItem(this.commands, target);
   };
 
   @action
-  public addLine = () => {
-    this.addCommand(new Line());
+  public addLine = (line = new Line()) => {
+    this.addCommand(line);
   };
 
   @action
-  public addCurve = () => {
-    this.addCommand(new Curve());
+  public addCurve = (curve = new Curve()) => {
+    this.addCommand(curve);
   };
 
   @action
   public addCommand = (command: Command) => {
-    this.commands.push(command);
-    this.setSortability(0);
-    this.setSortability(this.commands.length - 1);
+    addItem(this.commands, command);
   };
 
   // TODO: pass the command directly to sort/remove methods.
@@ -93,14 +88,6 @@ class Path implements ISvgElement {
               strokeWidth="${this.strokeWidth}"
             />`;
   }
-
-  private setSortability = (index: number) => {
-    if (this.commands[index] != null) {
-      const target = this.commands[index];
-      target.canSortUp = index > 0;
-      target.canSortDown = index < this.commands.length - 1;
-    }
-  };
 }
 
 export default Path;
