@@ -3,6 +3,19 @@ interface ISortable {
   canSortDown: boolean;
 }
 
+function addItem(items: ISortable[], item: ISortable) {
+  items.push(item);
+  setSortability(items, 0);
+  setSortability(items, items.length - 1);
+}
+
+function deleteItem(items: ISortable[], item: ISortable) {
+  const index = items.indexOf(item);
+  items.splice(index, 1);
+  setSortability(items, 0);
+  setSortability(items, items.length - 1);
+}
+
 function sortUp(items: ISortable[], item: ISortable) {
   const index = items.indexOf(item);
   const previous = items[index - 1];
@@ -33,5 +46,13 @@ function sortDown(items: ISortable[], item: ISortable) {
   }
 }
 
-export { sortDown, sortUp };
+function setSortability(items: ISortable[], index: number) {
+  if (items[index] != null) {
+    const target = items[index];
+    target.canSortUp = index > 0;
+    target.canSortDown = index < items.length - 1;
+  }
+}
+
+export { addItem, deleteItem, sortDown, sortUp };
 export default ISortable;
