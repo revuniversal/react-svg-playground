@@ -16,6 +16,11 @@ class Path implements ISvgElement {
   @observable public strokeWidth: number = 1;
   @observable public stroke: Color = '#000000';
   @observable public fill: Color = 'blue';
+  @observable public id: string;
+
+  constructor(id: string) {
+    this.id = id;
+  }
 
   @action
   public deleteCommand = (target: Command) => {
@@ -23,13 +28,13 @@ class Path implements ISvgElement {
   };
 
   @action
-  public addLine = (line = new Line()) => {
-    this.addCommand(line);
+  public addLine = () => {
+    this.addCommand(new Line());
   };
 
   @action
-  public addCurve = (curve = new Curve()) => {
-    this.addCommand(curve);
+  public addCurve = () => {
+    this.addCommand(new Curve());
   };
 
   @action
@@ -82,6 +87,7 @@ class Path implements ISvgElement {
 
   public get xml(): string {
     return `<path 
+              id="${this.id}"
               d="${this.toData()}"
               stroke="${this.stroke}"
               fill="${this.fill}"

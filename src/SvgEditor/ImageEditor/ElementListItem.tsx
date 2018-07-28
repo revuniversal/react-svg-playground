@@ -1,5 +1,7 @@
+import { observer } from 'mobx-react';
 import * as React from 'react';
 import Element from 'src/app/svg/SvgElement';
+import SvgImage from 'src/app/svg/SvgImage';
 import styled from 'src/styled-components';
 import Button from 'src/SvgEditor/Forms/Button';
 
@@ -24,26 +26,41 @@ const Main = styled.div``;
 const RightGutter = styled.div``;
 
 interface IProps {
-  svgElement: Element;
+  element: Element;
+  image: SvgImage;
   active?: boolean;
   key: number;
   onClick: (el: Element) => void;
 }
 
-const ElementListItem = ({ svgElement, active, onClick }: IProps) => (
+const ElementListItem = ({ element, image, onClick, active }: IProps) => (
   <Container active={active} onClick={onClick}>
     <LeftGutter>
-      <Button>&times;</Button>
+      <Button onClick={image.deleteElement.bind(image, element)}>
+        &times;
+      </Button>
     </LeftGutter>
     <Main>
-      {svgElement.constructor == null ? 'ERROR' : svgElement.constructor.name}
+      {element.constructor == null
+        ? 'ERROR'
+        : `<${element.constructor.name}[${element.id}]>`}
     </Main>
     <RightGutter>
-      <Button>&uarr;</Button>
+      <Button
+        disabled={!element.canSortUp}
+        onClick={image.sortElementUp.bind(image, element)}
+      >
+        &uarr;
+      </Button>
       <br />
-      <Button>&darr;</Button>
+      <Button
+        disabled={!element.canSortDown}
+        onClick={image.sortElementDown.bind(image, element)}
+      >
+        &darr;
+      </Button>
     </RightGutter>
   </Container>
 );
 
-export default ElementListItem;
+export default observer(ElementListItem);

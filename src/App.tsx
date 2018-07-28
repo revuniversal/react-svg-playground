@@ -7,7 +7,7 @@ import { ThemeProvider } from './styled-components';
 import SvgEditor from './SvgEditor';
 
 const image = new SvgImage();
-image.addElement(new Path());
+image.addElement(new Path('StarterPath'));
 
 class App extends React.Component {
   public render() {
